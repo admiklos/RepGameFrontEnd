@@ -1,14 +1,10 @@
-* {
-  box-sizing : border-box;
-  }
+
+
 
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-}
 
 .App-header {
   background-color: #282c34;
@@ -28,4 +24,19 @@
 table, th, td {
   border : 2px solid black;
   background-color : lightblue;
+}
+
+.my-card-content {
+  padding: 16px;
+}
+
+#root {
+  height: 100%;
+  border-radius: 8px;
+  position: relative;
+  background-image : url("./images/michael-9wXvgLMDetA-unsplash.jpg"); 
+  /*background-image : url("./images/max-larochelle-Aq297ML2cSk-unsplash.jpg"); */
+  background-position: center;
+  background-repeat:   no-repeat;
+  background-size:     cover;
 }

@@ -1,183 +1,101 @@
 import React from 'react';
+
+// React Router imports
+import { Link as RouterLink } from 'react-router-dom';
+import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+// site imports
 import './App.css';
-import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import LeaderBoard from './components/ShowLeaderBoard';
-import PlayerForm from './components/PlayerForm';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import Game from './components/Game';
+
+// Material UI imports
+import { AppBar, Toolbar } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
+import { Button, IconButton } from '@material-ui/core';
+
+const Link1 = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      gamePlayers       : [],
-      senateMembers     : [],
-      houseMembers      : [],
-      memberTrivia      : [],
-      maleMemberNames   : [],
-      femaleMemberNames : [],
-      generalQuestions  : []
+      gamePlayers   : [],
+      currentPlayerName : "Betty Boop",
+      currentPlayer : 0,
     }
   }
 
-
-  fetchLeaderBoard=()=>{
+  fetchLeaderBoard=(name)=>{
     fetch("http://localhost:8080/players")
       .then((res)=> res.json())
       .then((gamePlayers)=>{
         this.setState({
           gamePlayers : gamePlayers
-        })
+        });
+        if (name) {
+          this.setState({
+              currentPlayerName : name
+            });
+          this.setState({
+            currentPlayer : this.state.gamePlayers.indexOf(this.state.gamePlayers.find(player => player.playerName === name))
+          });
+          console.log("INDEX IS: " + this.state.gamePlayers.indexOf(name));
+        }
+        console.log("NAME IS: " + this.state.currentPlayerName);
+        console.log("THIS IS CURRENT PLAYER: " + this.state.currentPlayer);
+        console.log("THIS IS CURRENT PLAYER FROM ARRAY: " + this.state.gamePlayers[0].playerName);
+        if (this.state.currentPlayer !== -1) {
+            let index = this.state.currentPlayer;
+            console.log("CURRENT PLAYER ID IS: " + this.state.gamePlayers[index].id);
+            console.log("CURRENT PLAYER NAME IS: " + this.state.gamePlayers[index].playerName);
+            console.log("CURRENT PLAYER LAST SCORE IS: " + this.state.gamePlayers[index].lastScore);
+            console.log("CURRENT PLAYER TOTAL GAMES IS: " + this.state.gamePlayers[index].totalGamesPlayed);
+            console.log("CURRENT PLAYER PERCENTAGE IS: " + this.state.gamePlayers[index].percentageWon);
+        }
+
       })
   }
 
-  createMemberNameList = () => {
-    this.state.senateMembers.forEach( (member) => {
-      if (member.gender === "M")
-        this.setState({
-            maleMemberNames: [...this.state.maleMemberNames, member.first_name + " " + member.last_name ]
-         });
-      else 
-        this.setState({
-            femaleMemberNames: [...this.state.femaleMemberNames, member.first_name + " " + member.last_name ]
-         });
-    });
-  }
-
-  getRandomMemberName = (gender) => {
-    if (gender === "M") {
-      let size = this.state.maleMemberNames.length;
-      return this.state.maleMemberNames[(Math.floor(Math.random() * (size*size) % size))];
-    }
-    else {
-      let size = this.state.femaleMemberNames.length;
-      return this.state.femaleMemberNames[(Math.floor(Math.random() * (size*size) % size))];
-    }
-  }
-
-  getRandomState(memberState) {
-    const stateList = ["AK","AL","AZ","AR","CA","CO","CT","DE","FL","GA",
-                "HI","ID","IL","IN","IA","KS","KY","LA","ME","MD",
-                "MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
-                "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC",
-                "SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
-
-    let index = (Math.floor(Math.random() * 2500 % 50));
-    let result = stateList[index];
-    while (stateList[index] === memberState) {
-      index = (Math.floor(Math.random() * 2500 % 50));
-      result = stateList[index];
-    }
-    return result;
-  }
-
-  createNewTriviaEntry=(member, chamber)=>{
-    let notChamber = chamber === "House" ? "Senate" : "House";
-    let newItem = {
-      memberId: member.id,
-      memberPhoto: "https://theunitedstates.io/images/congress/225x275/" + member.id + ".jpg",
-      trivia  : [{
-        question          : "What is my name?",
-        correct_answer    : member.first_name + " " + member.last_name,
-        incorrect_answers : [] 
-        },
-        {
-        question          : "What state do I represent?",
-        correct_answer    : member.state,
-        incorrect_answers : [this.getRandomState(member.state), this.getRandomState(member.state), this.getRandomState(member.state)] 
-        },
-        {
-        question          : "What chamber of congress do I work in, Senate or House of Representatives?",
-        correct_answer    : chamber,
-        incorrect_answers : [notChamber] 
-        },
-        {
-        question          : "Which party do I belong to?",
-        correct_answer    :  member.party === "R" ? "Republican" : "Democrat",
-        incorrect_answers : [member.party === "R" ? "Democrat" : "Republican"] 
-        }]
-    };
-
-    //console.log(newItem);
-    this.setState({
-      memberTrivia: [...this.state.memberTrivia, newItem ]
-    });
-    //console.log(this.state.memberTrivia[this.state.memberTrivia.length-1]);
-  }
-
-  fetchSenateMembers=()=>{
-    fetch ("https://api.propublica.org/congress/v1/116/senate/members/",
-            {headers: {"X-API-Key" : "PznofnR4rVxDnNyUiiZ2mu6ocFnnnuxUHQmpN8oS"} }) 
-       .then(res => res.json())
-       .then(response => {
-          //console.log(response.results[0].members);
-          this.setState({
-            senateMembers : response.results[0].members
-          });
-          this.state.senateMembers.forEach( (member) => {
-            //console.log(member);
-            this.createNewTriviaEntry(member, "Senate");
-          });
-        });
-  }
-
-  fetchHouseMembers=()=>{
-    fetch ("https://api.propublica.org/congress/v1/116/house/members/",
-           {headers: {"X-API-Key" : "PznofnR4rVxDnNyUiiZ2mu6ocFnnnuxUHQmpN8oS"} }) 
-       .then(res => res.json())
-       .then(response => {
-          //console.log(response.results[0].members);
-          this.setState({
-            houseMembers : response.results[0].members
-          });
-          this.state.houseMembers.forEach( (member) => {
-            this.createNewTriviaEntry(member, "House");
-          });
-          //console.log(this.state.memberTrivia);
-        });
-  }
-
-  fetchGeneralTrivia=()=>{
-    fetch ("https://opentdb.com/api.php?amount=5&category=24&difficulty=medium&type=multiple") 
-       .then(res => res.json())
-       .then(response => {
-         //console.log(response.results);
-         this.setState({
-          generalQuestions : response.results
-        });
-      });
-  }
-
   componentDidMount() {
-    this.fetchLeaderBoard();
-    this.fetchSenateMembers();
-    this.fetchHouseMembers();
-    this.fetchGeneralTrivia();
+    this.fetchLeaderBoard("");
   }
 
   render() {
     return (
       <Router>
-        <nav>
-          <ul>
-          <li>
-            <Link to="/leader-board">LeaderBoard</Link>
-          </li>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          </ul>
-        </nav>
+        <div style={{"flexGrow":"1"}}>
+          <AppBar position="static">
+            <Toolbar>
+                <Typography variant="h6" style={{"flexGrow":"1"}}>
+                  Welcome {this.state.currentPlayerName}
+                </Typography>
+                <Button component={Link1} to="/" color="inherit">Home</Button>
+                <Button component={Link1} to="/leader-board" color="inherit">LeaderBoard</Button>
+                <IconButton component={Link1} to="/settings" style={{"marginRight": "theme.spacing(2)"}} color="inherit" aria-label="settings">
+                <SettingsOutlinedIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+        </div>
         <div id="content_body">
           <Switch>
-            <Route path="/game">
+            <Route path="/allofcongress">
+              <Game players={this.state.gamePlayers} fetchPlayers={this.fetchLeaderBoard}/>
             </Route>
             <Route path="/leader-board">
               <LeaderBoard players={this.state.gamePlayers}/>
             </Route>
             <Route exact path="/">
-              <PlayerForm fetchPlayers={this.fetchLeaderBoard}/>
+              <SignIn fetchPlayers={this.fetchLeaderBoard}/>
+            </Route>
+            <Route path="/signup">
+              <SignUp fetchPlayers={this.fetchLeaderBoard}/>
             </Route>
           </Switch>
-
         </div>
       </Router>
     );

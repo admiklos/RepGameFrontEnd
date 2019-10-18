@@ -14,7 +14,7 @@ const ShowLeaderBoard = (props) => {
 	});
 	return (
 		<div>
-			<h1>Show all Players</h1>
+			<h1 style={{"textAlign":"center", "color":"white"}}>Show all Players</h1>
 			<table>
 			  <thead>
 				  <tr>
