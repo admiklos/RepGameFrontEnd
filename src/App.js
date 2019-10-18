@@ -29,34 +29,24 @@ class App extends React.Component {
     }
   }
 
-  fetchLeaderBoard=(name)=>{
+  setPlayer=(name)=>{
+    this.setState({
+      currentPlayerName : name
+    });
+    this.setState({
+      currentPlayer : this.state.gamePlayers.indexOf(this.state.gamePlayers.find(player => player.playerName === name))
+    });
+    console.log("NAME IS: " + this.state.currentPlayerName);
+    console.log("THIS IS CURRENT PLAYER: " + this.state.currentPlayer);
+  }
+
+  fetchLeaderBoard=()=>{
     fetch("http://localhost:8080/players")
       .then((res)=> res.json())
       .then((gamePlayers)=>{
         this.setState({
           gamePlayers : gamePlayers
         });
-        if (name) {
-          this.setState({
-              currentPlayerName : name
-            });
-          this.setState({
-            currentPlayer : this.state.gamePlayers.indexOf(this.state.gamePlayers.find(player => player.playerName === name))
-          });
-          console.log("INDEX IS: " + this.state.gamePlayers.indexOf(name));
-        }
-        console.log("NAME IS: " + this.state.currentPlayerName);
-        console.log("THIS IS CURRENT PLAYER: " + this.state.currentPlayer);
-        console.log("THIS IS CURRENT PLAYER FROM ARRAY: " + this.state.gamePlayers[0].playerName);
-        if (this.state.currentPlayer !== -1) {
-            let index = this.state.currentPlayer;
-            console.log("CURRENT PLAYER ID IS: " + this.state.gamePlayers[index].id);
-            console.log("CURRENT PLAYER NAME IS: " + this.state.gamePlayers[index].playerName);
-            console.log("CURRENT PLAYER LAST SCORE IS: " + this.state.gamePlayers[index].lastScore);
-            console.log("CURRENT PLAYER TOTAL GAMES IS: " + this.state.gamePlayers[index].totalGamesPlayed);
-            console.log("CURRENT PLAYER PERCENTAGE IS: " + this.state.gamePlayers[index].percentageWon);
-        }
-
       })
   }
 
@@ -90,10 +80,10 @@ class App extends React.Component {
               <LeaderBoard players={this.state.gamePlayers}/>
             </Route>
             <Route exact path="/">
-              <SignIn fetchPlayers={this.fetchLeaderBoard}/>
+              <SignIn fetchPlayers={this.fetchLeaderBoard} setPlayer={this.setPlayer}/>
             </Route>
             <Route path="/signup">
-              <SignUp fetchPlayers={this.fetchLeaderBoard}/>
+              <SignUp fetchPlayers={this.fetchLeaderBoard} currentPlayerName={this.state.currentPlayerName} setPlayer={this.setPlayer}/>
             </Route>
           </Switch>
         </div>

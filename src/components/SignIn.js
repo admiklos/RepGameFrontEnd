@@ -66,7 +66,7 @@ export default withStyles(styles)(class SignIn extends React.Component {
 			     })
 			 }).then(()=> {
 			 	console.log("Player " + this.state.player.playerName + " Posted.");
-		     	this.props.fetchPlayers(this.state.player.playerName);
+		     	this.props.fetchPlayers();
 		     	this.setState({
 		     		player : {
 		     			...this.state.player,
@@ -74,11 +74,11 @@ export default withStyles(styles)(class SignIn extends React.Component {
 		     		}
 		     	});
 		     	})
-
     }
 
     handlePlayerEntry = () => {
     	let prevPlayer;
+        this.props.setPlayer("Tom Smith");
         fetch('http://localhost:8080/players')
             .then((res) => res.json())
             .then((players)=>{
@@ -87,7 +87,6 @@ export default withStyles(styles)(class SignIn extends React.Component {
             			return player.playerName === this.state.player.playerName;
             		});
             	if (prevPlayer) {
-            		this.props.fetchPlayers(this.state.player.playerName);
             		console.log("Welcome back " + prevPlayer.playerName);
             	} else {
             		this.postPlayer();
