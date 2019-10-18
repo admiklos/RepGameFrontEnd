@@ -24,7 +24,7 @@ class App extends React.Component {
     super();
     this.state = {
       gamePlayers   : [],
-      currentPlayerName : "Betty Boop",
+      currentPlayerName : "",
       currentPlayer : 0,
     }
   }
@@ -34,10 +34,8 @@ class App extends React.Component {
       currentPlayerName : name
     });
     this.setState({
-      currentPlayer : this.state.gamePlayers.indexOf(this.state.gamePlayers.find(player => player.playerName === name))
-    });
-    console.log("NAME IS: " + this.state.currentPlayerName);
-    console.log("THIS IS CURRENT PLAYER: " + this.state.currentPlayer);
+       currentPlayer : this.state.gamePlayers.indexOf(this.state.gamePlayers.find(player => player.playerName === name))
+     });
   }
 
   fetchLeaderBoard=()=>{
@@ -53,11 +51,19 @@ class App extends React.Component {
   componentDidMount() {
     this.fetchLeaderBoard("");
   }
+  
 
   render() {
+    document.getElementsByTagName("body")[0].style.height = `100%`;
+    document.getElementsByTagName("body")[0].style.borderRadius = `8px`;
+    document.getElementsByTagName("body")[0].style.position = `relative`;
+    document.getElementsByTagName("body")[0].style.backgroundPosition = `center`;
+    document.getElementsByTagName("body")[0].style.backgroundRepeat = `no-repeat`;
+    document.getElementsByTagName("body")[0].style.backgroundSize = `cover`;
+
     return (
       <Router>
-        <div style={{"flexGrow":"1"}}>
+        <div style={{"flexGrow":"1" }}>
           <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" style={{"flexGrow":"1"}}>
@@ -83,7 +89,7 @@ class App extends React.Component {
               <SignIn fetchPlayers={this.fetchLeaderBoard} setPlayer={this.setPlayer}/>
             </Route>
             <Route path="/signup">
-              <SignUp fetchPlayers={this.fetchLeaderBoard} currentPlayerName={this.state.currentPlayerName} setPlayer={this.setPlayer}/>
+              <SignUp fetchPlayers={this.fetchLeaderBoard} setPlayer={this.setPlayer}/>
             </Route>
           </Switch>
         </div>

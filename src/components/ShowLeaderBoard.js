@@ -1,8 +1,18 @@
 import React from 'react';
+import LeaderBoardImage from '../images/max-larochelle-Aq297ML2cSk-unsplash.jpg';
+
+// componentDidMount() {
+//   document.getElementById("root").style.backgroundImmage = 'url("./images/max-larochelle-Aq297ML2cSk-unsplash.jpg")';
+// }
+
 
 const ShowLeaderBoard = (props) => {
+
 	console.log(props.players);
+	document.getElementsByTagName("body")[0].style.backgroundImage = "url(" + LeaderBoardImage + ")";
+
 	let playerArr = props.players.map( (player, index) => {
+
         return(
               <tr key={index}>
               	<td>{player.playerName}</td>
@@ -12,6 +22,7 @@ const ShowLeaderBoard = (props) => {
               </tr>
         )
 	});
+
 	return (
 		<div>
 			<h1 style={{"textAlign":"center", "color":"white"}}>Show all Players</h1>

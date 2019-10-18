@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import GameImage from '../images/michael-9wXvgLMDetA-unsplash.jpg';
 
 
 const useStyles = makeStyles(theme => ({
@@ -224,6 +225,7 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
+    document.getElementsByTagName("body")[0].style.backgroundImage = "url(" + GameImage + ")";
     Promise.all([this.fetchSenateMembers(), this.fetchHouseMembers(), this.fetchGeneralTrivia()])
     .then((results)=>{
       // console.log(results[0]);
@@ -292,9 +294,9 @@ class Game extends React.Component {
     const setQuestion = 
       (this.state.memberTrivia[this.state.currentQuestion.member]) ?
        this.state.memberTrivia[this.state.currentQuestion.member].trivia[this.state.currentQuestion.trivia] : "";
-
+//style={{"backgroundImage" : 'url("./images/michael-9wXvgLMDetA-unsplash.jpg")'}}
     	return (
-    	  <div>
+    	  <div >
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <Grid container spacing={1} direction="column" alignItems="center">
@@ -314,6 +316,7 @@ class Game extends React.Component {
 
 
 function GameCard(props) {
+
   const answerStyle = (props.question) ? 
                       ((props.question.totalOptions === 4) ? 
                           {"fontSize" : ".6rem"} : {"visibility" : "hidden"} ) : {"fontSize" : ".6rem"};
@@ -362,29 +365,6 @@ function GameCard(props) {
 	);
 
 }
-
-//<Card className='mdc-card demo-card'>
-//	  <CardPrimaryContent className='demo-card__primary-action'>
-//	    <CardMedia wide imageUrl={image} className='demo-card__media' />
-//	  <div className='demo-card__primary'>
-//	    <Headline6 className='demo-card__title'>
-//	      Our Changing Planet
-//	    </Headline6>
-//	    <Subtitle2 className='demo-card__subtitle'>
-//	      by Kurt Wagner
-//	    </Subtitle2>
-//	  </div>
-//	  <Body2 className='demo-card__secondary'>
-//	    Visit ten places on our planet that are undergoing the biggest changes today.
-//	  </Body2>
-//	  </CardPrimaryContent>
-//	  <CardActions>
-//	    <CardActionButtons>
-//	      <Button>Read</Button>
-//	      <Button>Bookmark</Button>
-//	    </CardActionButtons>
-//	  </CardActions>
-//		</Card>
 
 
 export default Game;

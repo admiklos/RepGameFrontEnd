@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControl from '@material-ui/core/FormControl';
+import SignInImage from '../images/michael-9wXvgLMDetA-unsplash.jpg';
 
 
 const styles = theme => ({
@@ -15,8 +16,6 @@ const styles = theme => ({
     margin: '5.5rem',
   },
   textField: {
-//    marginLeft: theme.spacing(1),
- //   marginRight: theme.spacing(1),
     background: 'white',
     float: 'left',
   },
@@ -28,27 +27,19 @@ const styles = theme => ({
   },
 });
 
-const Link1 = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
+const ButtonLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
 
 export default withStyles(styles)(class SignIn extends React.Component {
 	constructor(props) {
 		super(props);
 	    this.state = {
-	    	player : {
-	    		 playerName : '',
-				 lastScore : 0,
-				 totalGamesPlayed : 0,
-				 percentageWon : 0
-	    	}
+	    	playerNameInput:""
 	    }
     }
 
-	handleChange = name => (event) => {
+	handleChange = event => {
 		this.setState({
-			player: {
-			...this.state.player,
-        	[name]: event.target.value,		
-        	}	
+			playerNameInput: event.target.value
 		});
     }
 
@@ -59,14 +50,14 @@ export default withStyles(styles)(class SignIn extends React.Component {
 			     	"Content-Type": "application/json"
 			     },
 			     body : JSON.stringify({
-			     	playerName : this.state.player.playerName,
+			     	playerName : this.state.playerNameInput,
 			     	lastScore  : 0,
 			     	totalGamesPlayed : 0,
 			     	percentageWon : 0
 			     })
 			 }).then(()=> {
-			 	console.log("Player " + this.state.player.playerName + " Posted.");
-		     	this.props.fetchPlayers();
+			 	console.log("Player " + this.state.playerNameInput + " Posted.");
+		     	this.props.fetchPlayers(this.state.playerNameInput);
 		     	this.setState({
 		     		player : {
 		     			...this.state.player,
@@ -74,32 +65,35 @@ export default withStyles(styles)(class SignIn extends React.Component {
 		     		}
 		     	});
 		     	})
+
     }
 
     handlePlayerEntry = () => {
+        this.props.setPlayer(this.state.playerNameInput);
     	let prevPlayer;
-        this.props.setPlayer("Tom Smith");
         fetch('http://localhost:8080/players')
             .then((res) => res.json())
             .then((players)=>{
             	prevPlayer = players.find(
             		(player) => {
-            			return player.playerName === this.state.player.playerName;
+            			return player.playerName === this.state.playerNameInput;
             		});
             	if (prevPlayer) {
-            		console.log("Welcome back " + prevPlayer.playerName);
+            		this.props.fetchPlayers(this.state.playerNameInput);
+            		console.log("Welcome back " + prevPlayer.playerNameInput);
             	} else {
             		this.postPlayer();
-            		console.log("Welcome " + this.state.player.playerName);
+            		console.log("Welcome " + this.state.playerNameInput);
             	}
             });
 
     }
 
+
     render() {
+    	document.getElementsByTagName("body")[0].style.backgroundImage = "url(" + SignInImage + ")";
     	const { classes } = this.props;
 	 	return (
-	 		//document.getElementById("root")[0].style.backgroundImage = 'url("./images/michael-9wXvgLMDetA-unsplash.jpg"';
 
 			<div>
 				<h1 style={{"textAlign" : "center", "color" : "white"}}>Who Represents You?</h1>
@@ -112,9 +106,9 @@ export default withStyles(styles)(class SignIn extends React.Component {
 					        id="filled-name"
 					        label="Name"
 					        className={classes.textField}
-					        value={this.state.player.playerName}
+					        value={this.state.playerNameInput}
 					        required={true}
-					        onChange={this.handleChange('playerName')}
+					        onChange={this.handleChange}
 					        autoFocus={true}
 					        margin="normal"
 					        variant="filled"
@@ -129,8 +123,8 @@ export default withStyles(styles)(class SignIn extends React.Component {
 					        variant="filled"
 					      />
 					      </FormGroup>
-			              <Button style={{"marginTop" : "16px"}} size="large" variant="contained" href="/allofcongress" onClick={this.handlePlayerEntry}>Sign In</Button>
-			              <Button style={{"justifyContent" : "flex-end", "color" : "white"}} component={Link1} to="/signup">Sign Up?</Button>
+	                       <Button style={{"marginTop" : "16px"}} size="large" variant="contained" component={ButtonLink} onClick={this.handlePlayerEntry} to="/allOfCongress">Sign In</Button>
+                            <Button style={{"justifyContent" : "flex-end", "color" : "white"}} component={ButtonLink} to="/signup">Sign Up?</Button>
 	              </FormControl>
 			    </form>		
 			</div>
