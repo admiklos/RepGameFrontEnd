@@ -186,7 +186,7 @@ class App extends React.Component {
   }
 
   fetchSenateMembers=()=>{
-    fetch ('https://api.propublica.org/congress/v1/116/senate/members/',
+    fetch ('https://api.propublica.org/congress/v1/116/senate/members.json',
         {
            method: "get",
             headers: {
@@ -211,7 +211,7 @@ class App extends React.Component {
   }
 
   fetchHouseMembers=()=>{
-    fetch ('https://api.propublica.org/congress/v1/116/house/members/', 
+    fetch ('https://api.propublica.org/congress/v1/116/house/members.json', 
         { 
             method : "get",
             headers: {
