@@ -50,6 +50,16 @@ class App extends React.Component {
             femaleMemberNames: [...this.state.femaleMemberNames, member.first_name + " " + member.last_name ]
          });
     });
+    this.state.houseMembers.forEach( (member) => {
+      if (member.gender === "M")
+        this.setState({
+            maleMemberNames: [...this.state.maleMemberNames, member.first_name + " " + member.last_name ]
+         });
+      else 
+        this.setState({
+            femaleMemberNames: [...this.state.femaleMemberNames, member.first_name + " " + member.last_name ]
+         });
+    });
   }
 
   // used for incorrect answers - return a random gender-equivalent name
@@ -187,6 +197,9 @@ class App extends React.Component {
       memberTrivia: [...this.state.memberTrivia, newItem ]
     });
     if (this.state.memberTrivia.length === this.state.totalMembers) {
+       console.log("Number of member trivia: " + this.state.memberTrivia.length);
+       console.log("Number of totalMembers: " + this.state.totalMembers);
+       this.createMemberNameList();
        this.createQuestionList();
     }
   }
