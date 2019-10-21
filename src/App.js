@@ -25,7 +25,13 @@ class App extends React.Component {
     this.state = {
       currentPlayerName : "",
       gamePlayers       : [],
-      currentPlayer     : {},
+      currentPlayer     : {
+        playerId          : 0, 
+        playerName        : "",
+        lastScore         : 0,
+        totalGamesPlayed  : 0,
+        percentageWon     : 0,
+      },
       senateMembers     : [],
       houseMembers      : [],
       maleMemberNames   : [],
@@ -272,9 +278,10 @@ class App extends React.Component {
     console.log("PASSED IN PARAM: " + aName + " STATE JUST SET: " + this.state.currentPlayerName + "!");
 
     this.setState({currentPlayer:this.state.gamePlayers.find(player => player.playerName === aName)});
+
     console.log("NAME: " + aName);
     console.log("SET PLAYER: " + this.state.currentPlayerName + " CurrentPlayer: " + 
-      this.state.currentPlayer.playerName);
+                  this.state.currentPlayer.playerName);
   }
 
   fetchLeaderBoard=()=>{
