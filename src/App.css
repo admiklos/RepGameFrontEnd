@@ -30,3 +30,12 @@ table, th, td {
   padding: 16px;
 }
 
+body {
+  height: 100%;
+  border-radius: 8px;
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+

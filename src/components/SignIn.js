@@ -41,6 +41,8 @@ export default withStyles(styles)(class SignIn extends React.Component {
 		this.setState({
 			playerNameInput: event.target.value
 		});
+
+		console.log("PLAYER IS: " + this.state.playerNameInput);
     }
 
     postPlayer = () => {
@@ -57,19 +59,15 @@ export default withStyles(styles)(class SignIn extends React.Component {
 			     })
 			 }).then(()=> {
 			 	console.log("Player " + this.state.playerNameInput + " Posted.");
-		     	this.props.fetchPlayers(this.state.playerNameInput);
-		     	this.setState({
-		     		player : {
-		     			...this.state.player,
-		     			playerName : "",
-		     		}
-		     	});
+		     	this.props.fetchPlayers();
+		     	this.setState({ playerNameInput : ""});
 		     	})
 
     }
 
     handlePlayerEntry = () => {
         this.props.setPlayer(this.state.playerNameInput);
+        console.log("PLAYER NAME INPUT: " + this.state.playerNameInput);
     	let prevPlayer;
         fetch('http://localhost:8080/players')
             .then((res) => res.json())
@@ -79,23 +77,21 @@ export default withStyles(styles)(class SignIn extends React.Component {
             			return player.playerName === this.state.playerNameInput;
             		});
             	if (prevPlayer) {
-            		this.props.fetchPlayers(this.state.playerNameInput);
+            		this.props.fetchPlayers();
             		console.log("Welcome back " + prevPlayer.playerNameInput);
             	} else {
             		this.postPlayer();
-            		console.log("Welcome " + this.state.playerNameInput);
+            		console.log(this.state.playerNameInput + " cannot log in - user not found");
             	}
             });
 
     }
 
-
     render() {
-    	document.getElementsByTagName("body")[0].style.backgroundImage = "url(" + SignInImage + ")";
     	const { classes } = this.props;
+        document.getElementsByTagName("body")[0].style.backgroundImage = "url(" + SignInImage + ")";
 	 	return (
-
-			<div>
+			<div >
 				<h1 style={{"textAlign" : "center", "color" : "white"}}>Who Represents You?</h1>
 				<h2 style={{"textAlign" : "center", "color" : "white"}}>Trivia Game</h2>
 			    <form className={classes.container} noValidate autoComplete="off">
@@ -123,7 +119,7 @@ export default withStyles(styles)(class SignIn extends React.Component {
 					        variant="filled"
 					      />
 					      </FormGroup>
-	                       <Button style={{"marginTop" : "16px"}} size="large" variant="contained" component={ButtonLink} onClick={this.handlePlayerEntry} to="/allOfCongress">Sign In</Button>
+	                       <Button style={{"marginTop" : "16px"}} size="large" variant="contained" component={ButtonLink} onClick={this.handlePlayerEntry} to="/allofcongress">Sign In</Button>
                             <Button style={{"justifyContent" : "flex-end", "color" : "white"}} component={ButtonLink} to="/signup">Sign Up?</Button>
 	              </FormControl>
 			    </form>		

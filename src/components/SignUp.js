@@ -41,6 +41,8 @@ export default withStyles(styles)(class SignUp extends React.Component {
 		this.setState({
 			playerNameInput: event.target.value
 		});
+
+		console.log("PLAYER IS: " + this.state.playerNameInput);
     }
 
     postPlayer = () => {
@@ -57,13 +59,8 @@ export default withStyles(styles)(class SignUp extends React.Component {
 			     })
 			 }).then(()=> {
 			 	console.log("Player " + this.state.playerNameInput + " Posted.");
-		     	this.props.fetchPlayers(this.state.playerNameInput);
-		     	this.setState({
-		     		player : {
-		     			...this.state.player,
-		     			playerName : "",
-		     		}
-		     	});
+		     	this.props.fetchPlayers();
+		     	this.setState({ playerNameInput : ""});
 		     	})
 
     }
@@ -79,8 +76,9 @@ export default withStyles(styles)(class SignUp extends React.Component {
             			return player.playerName === this.state.playerNameInput;
             		});
             	if (prevPlayer) {
-            		this.props.fetchPlayers(this.state.playerNameInput);
-            		console.log("Welcome back " + prevPlayer.playerNameInput);
+            		this.props.fetchPlayers();
+            		// TODO
+            		console.log(this.state.playerNameInput + " cannot log in - user already in DB");
             	} else {
             		this.postPlayer();
             		console.log("Welcome " + this.state.playerNameInput);
@@ -121,8 +119,8 @@ export default withStyles(styles)(class SignUp extends React.Component {
 					        variant="filled"
 					      />
 					      </FormGroup>
-	                       <Button style={{"marginTop" : "16px"}} size="large" variant="contained" component={ButtonLink} onClick={this.handlePlayerEntry} to="/allOfCongress">Create</Button>
-                            <Button style={{"justifyContent" : "flex-end", "color" : "white"}} component={ButtonLink} to="/signup">Sign In?</Button>
+	                       <Button style={{"marginTop" : "16px"}} size="large" variant="contained" component={ButtonLink} onClick={this.handlePlayerEntry} to="/allofcongress">Create</Button>
+                            <Button style={{"justifyContent" : "flex-end", "color" : "white"}} component={ButtonLink} to="/">Sign In?</Button>
 	              </FormControl>
 			    </form>		
 			</div>
