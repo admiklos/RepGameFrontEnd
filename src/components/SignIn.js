@@ -69,7 +69,7 @@ export default withStyles(styles)(class SignIn extends React.Component {
         this.props.setPlayer(this.state.playerNameInput);
         console.log("PLAYER NAME INPUT: " + this.state.playerNameInput);
     	let prevPlayer;
-        fetch('http://localhost:8080/players')
+        fetch('https://whorepresentsyou.cfapps.io/players')
             .then((res) => res.json())
             .then((players)=>{
             	prevPlayer = players.find(

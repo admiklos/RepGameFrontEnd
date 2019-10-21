@@ -137,7 +137,7 @@ class Game extends React.Component {
 
 
     updatePlayer = (id) => {
-    fetch('http://localhost:8080/player' + id, {
+    fetch('https://whorepresentsyou.cfapps.io/player' + id, {
            method  : 'put',
            headers : {
             "Content-Type": "application/json"

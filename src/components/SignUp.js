@@ -68,7 +68,7 @@ export default withStyles(styles)(class SignUp extends React.Component {
     handlePlayerEntry = () => {
         this.props.setPlayer(this.state.playerNameInput);
     	let prevPlayer;
-        fetch('http://localhost:8080/players')
+        fetch('https://whorepresentsyou.cfapps.io/players')
             .then((res) => res.json())
             .then((players)=>{
             	prevPlayer = players.find(

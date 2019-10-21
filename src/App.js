@@ -259,7 +259,7 @@ class App extends React.Component {
   }
 
   fetchLeaderBoard=()=>{
-    fetch("http://localhost:8080/players")
+    fetch("https://whorepresentsyou.cfapps.io/players")
       .then((res)=> res.json())
       .then((response)=>{
         console.log(response);
