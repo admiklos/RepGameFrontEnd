@@ -96,9 +96,15 @@ class App extends React.Component {
             choices.push(trivia.answers(trivia.param));            
           }
         }
+        console.log("choice 1: " + choices[0]);
+        console.log("choice 2: " + choices[1]);
+        console.log("choice 3: " + choices[2]);
+        console.log("choice 4: " + choices[3]);
       } else {
         choices.push(trivia.answers[0]);
         choices.push(trivia.answers[1]);
+        console.log("choice 1: " + choices[0]);
+        console.log("choice 2: " + choices[1]);
       }
       const newQuestion = {
         imageUrl       : triviaItem.memberPhoto,
