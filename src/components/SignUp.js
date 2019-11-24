@@ -33,7 +33,8 @@ export default withStyles(styles)(class SignUp extends React.Component {
 	constructor(props) {
 		super(props);
 	    this.state = {
-	    	playerNameInput:""
+	    	playerNameInput:"",
+	    	players: []
 	    }
     }
 
@@ -67,10 +68,14 @@ export default withStyles(styles)(class SignUp extends React.Component {
 
     handlePlayerEntry = () => {
         this.props.setPlayer(this.state.playerNameInput);
+        console.log("PLAYER NAME INPUT: " + this.state.playerNameInput);
     	let prevPlayer;
         fetch('https://whorepresentsyou.cfapps.io/players')
             .then((res) => res.json())
             .then((players)=>{
+            	this.setState({
+            		players: players
+            	});
             	prevPlayer = players.find(
             		(player) => {
             			return player.playerName === this.state.playerNameInput;
@@ -118,8 +123,25 @@ export default withStyles(styles)(class SignUp extends React.Component {
 					        margin="normal"
 					        variant="filled"
 					      />
+					      <TextField
+					        id="filled-password-input"
+					        label="Verify-Password"
+					        className={classes.textField}
+					        type="password"
+					        autoComplete="current-password"
+					        margin="normal"
+					        variant="filled"
+					      />
 					      </FormGroup>
-	                       <Button style={{"marginTop" : "16px"}} size="large" variant="contained" component={ButtonLink} onClick={this.handlePlayerEntry} to="/allofcongress">Create</Button>
+	                       <RouterLink to={{
+	                       	pathname : "/allofcongress",
+	                       	state : {
+	                       		playerName : this.state.playerName,
+	                       		players    : this.state.players
+	                       	}
+	                       }}>
+	                         <Button style={{"marginTop" : "16px"}} size="large" variant="contained" onClick={this.handlePlayerEntry}>Sign Up</Button>
+	                         </RouterLink>
                             <Button style={{"justifyContent" : "flex-end", "color" : "white"}} component={ButtonLink} to="/">Sign In?</Button>
 	              </FormControl>
 			    </form>		
