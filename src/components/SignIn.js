@@ -35,12 +35,12 @@ const SignIn = (props) => {
 	const [signInErrors, setSignInErrors] = React.useState("");
     document.getElementsByTagName("body")[0].style.backgroundImage = "url(" + SignInImage + ")";
 
-	const handleChange = event => {
-		event.preventDefault();
-		setPlayerName(event.target.value);
+	const handleChange = (e) => {
+        e.preventDefault();
+		setPlayerName(e.target.value);
     }
 
-    const handlePlayerEntry = event => {
+    const handlePlayerEntry = (e) => {
     	let currPlayer = props.players.find(
     		(player) => {
     			return player.playerName === playerName;

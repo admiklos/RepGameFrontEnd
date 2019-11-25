@@ -1,4 +1,4 @@
-import React, { useEffect, memo, lazy } from 'react';
+import React, { useEffect } from 'react';
 
 // React Router imports
 import { Link as RouterLink } from 'react-router-dom';
@@ -15,7 +15,6 @@ import GameImage from '../images/michael-9wXvgLMDetA-unsplash.jpg';
 
 
 const ButtonLink = React.forwardRef((props, ref) => <RouterLink innerRef={ref} {...props} />);
-//const GameCard = lazy(()=> import('./GameCard'));
 
 const Game = (props) => {
 
@@ -26,6 +25,8 @@ const Game = (props) => {
   const [lastAnswer, setLastAnswer] = React.useState("");
   const [questionIndex, setQuestionIndex] = React.useState(0);
   const [answerText, setAnswerText] = React.useState("");
+  const [resultText, setResultText] = React.useState("");
+
   const [isGameOver, setGameOver] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -45,63 +46,82 @@ const Game = (props) => {
   const answerSelected = (e) => {
     console.log(e.target);
     setLastAnswer(e.target.innerHTML);
+    setAnswerText("");
   }
 
-  const startOverSelected = (e) => {
-    console.log("Start Over: " + e.target.value);
-    gameOver();
-  }
-
-  const exitSelected = (e) => {
+  const resetGameState = () => {
     setLastAnswer("");
     setLastScore(0);
     setQuestionIndex(0);
+    setAnswerText("");
   }
 
-  const nextSelected = (e) => {
-    let questionList = props.questions;
-    console.log("Player Score: " + lastScore);
-    console.log("Total Games Played: " + totalGamesPlayed);
-    console.log("Percentage Won: " + percentageWon);
-    console.log("Last Answer: " + lastAnswer);
-    console.log("Index into Question List: " + questionIndex);
-    console.log("Question List: " + questionList.map(question => question));
+  const startOverSelected = (e) => {
+    console.log("Start Over: " + e.target);
+    resetGameState([]);
+    setGameOver(false);
+    if (e.target.innerHTML === "Yes") {
+      props.newGame([]);
+      setIsLoading(true);
+    }
+  }
 
-    let checkValue;
-    if (questionList.length > 0 && questionIndex < 10) {
-      setQuestionIndex(prevIndex => prevIndex + 1);
-      setLastAnswer("");
-      checkValue = questionList[questionIndex].correctAnswer;
+  const exitSelected = (e) => {
+    resetGameState();
+  }
+
+  const checkAnswer = () => {
+      let checkValue = props.questions[questionIndex].correctAnswer;
       if (lastAnswer === checkValue) {
         console.log("I GOT IT RIGHT!")
         setLastScore(prevScore => prevScore + 1);
         setAnswerText("Correct");
       } else {
         console.log("I GOT IT WRONG")
-        setAnswerText("Ooops!  No, the correct answer is: " + lastAnswer);
-      }
+        setAnswerText("Oops!  No, the correct answer is: " + checkValue);
+      }    
+  }
 
+  const nextSelected = (e) => {
+    let questionList = props.questions;
+    if (questionList.length > 0) {
       console.log("Player Score: " + lastScore);
       console.log("Last Answer: " + lastAnswer);
       console.log("Last Score: " + lastScore);
       console.log("Index into Question List: " + questionIndex);
       console.log("AnswerText: " + answerText);
+      checkAnswer();
+      setLastAnswer("");
 
-    } else if (questionList.length <= 0) {
-      window.alert("Questions have failed to load.");
+      if (questionIndex >= 9) {
+        gameOver();
+      } else {
+        setQuestionIndex(prevIndex => prevIndex + 1);
+      }
+
     } else {
-      gameOver();
-    }
-    
+      window.alert("Questions have not loaded yet.");
+    } 
   }
 
-  const gameOver=()=>{
+  const gameOver = () => {
+    let newPercentage = percentageWon;
     if (lastScore > 5) {
-      setPercentageWon(prevPercentage => ((totalGamesPlayed * prevPercentage) + 100) / (totalGamesPlayed + 1));
+      newPercentage = ((totalGamesPlayed * newPercentage) + 100) / (totalGamesPlayed + 1);
+      setPercentageWon(newPercentage);
+      setResultText(lastScore + " out of 10 correct. You Won!")
+    } else {
+      setResultText(lastScore + " out of 10 correct. You Lost.")
     }
-    setTotalGamesPlayed(prevPlayed => prevPlayed + 1);
-    setQuestionIndex(0);
+    let newTotal = totalGamesPlayed + 1;
+    setTotalGamesPlayed(newTotal);
     setGameOver(true);
+    let modPlayer = props.players[props.player];
+    modPlayer.percentageWon = newPercentage;
+    modPlayer.gamesPlayed = newTotal;
+    modPlayer.lastScore = lastScore;
+    props.update(modPlayer);
+    resetGameState();
   }
 
   // TODO: took out the Yes button below until I get the callbacks working -
@@ -113,9 +133,11 @@ const Game = (props) => {
     if (isGameOver) {
       result =
         <div>
+          <h1 style={{"color" :"white"}}>{resultText}</h1>
           <h1 style={{"color" :"white"}}>Would You Like To Play Another Game?</h1>
           <ButtonGroup>
-            <Button component={ButtonLink} to="/" onClick={exitSelected}>No</Button> 
+            <Button style={{"color" :"white"}} component={ButtonLink} to="/" onClick={exitSelected}>No</Button> 
+            <Button style={{"color" :"white"}} onClick={startOverSelected}>Yes</Button> 
           </ButtonGroup>
         </div>
     } else if (isLoading) {
@@ -132,17 +154,17 @@ const Game = (props) => {
 
 	return (
 	  <div >
-    {console.log("Inside Game render:")}
-    {console.log("- props", props.player, props.players)}
-    {console.log("- props.questions", props.questions)}
-    {console.log("lastScore:", lastScore)}
-    {console.log("totalGamesPlayed:", totalGamesPlayed)}
-    {console.log("percentageWon:", percentageWon)}
-    {console.log("lastAnswer:", lastAnswer)}
-    {console.log("questionIndex:", questionIndex)}
-    {console.log("answerText:", answerText)}
-    {console.log("isGameOver:", isGameOver)}
-    {console.log("isLoading:", isLoading)}   
+      {console.log("Inside Game render:")}
+      {console.log("- props", props.player, props.players)}
+      {console.log("- props.questions", props.questions)}
+      {console.log("lastScore:", lastScore)}
+      {console.log("totalGamesPlayed:", totalGamesPlayed)}
+      {console.log("percentageWon:", percentageWon)}
+      {console.log("lastAnswer:", lastAnswer)}
+      {console.log("questionIndex:", questionIndex)}
+      {console.log("answerText:", answerText)}
+      {console.log("isGameOver:", isGameOver)}
+      {console.log("isLoading:", isLoading)}   
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Grid container spacing={1} direction="column" alignItems="center">
@@ -154,7 +176,7 @@ const Game = (props) => {
         <Grid item xs={12} md={6}>
           <Grid container spacing={1} direction="column" alignItems="center">
             <Grid item>
-            <Typography variant="h6" style={{"flexGrow":"1"}}>
+            <Typography variant="h6" style={{"flexGrow":"1", "color" : "white"}}>
                {answerText}
             </Typography>            
             </Grid>

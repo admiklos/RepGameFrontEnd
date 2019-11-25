@@ -25,10 +25,15 @@ const App = (props) => {
       .then((response)=>{
         setGamePlayers(response);
         console.log("FETCHLEADERBOARD: ", response);
+        if (currPlayerName !== "" && currPlayerId === 0) {
+           let currPlayer = gamePlayers.find(player => player.playerName === currPlayerName);
+           setPlayer(currPlayer);
+        }
       });
   }
 
   const addPlayer = (newPlayer) => {
+    setCurrPlayerName(newPlayer);
     setCurrLastScore(0);
     setCurrTotalPlayed(0);
     setCurrPercentageWon(0);
@@ -46,7 +51,7 @@ const App = (props) => {
          })
      }).then(()=> {
         fetchLeaderBoard();
-        })
+      });
   }
 
   const updatePlayer = (modPlayer) => {
@@ -57,6 +62,7 @@ const App = (props) => {
           "Content-Type": "application/json"
          },
          body : JSON.stringify({
+          id : 0,
           playerName : modPlayer.playerName,
           lastScore  : modPlayer.lastScore,
           totalGamesPlayed : modPlayer.totalGamesPlayed,

@@ -46,27 +46,27 @@ function GameCard(props) {
 	      />
   	    <CardContent style={{"paddingBottom" : "0"}}>
   	      <Typography variant="h6" color="textSecondary" component="p">
-  	          {props.card ? props.card.questionText : "What is my name?"}
+  	          {props.card.questionText}
   	      </Typography>
   	      <CardActions>
   	        <ButtonGroup fullWidth={false}>
   	          <Button key="0" style={{"fontSize" : ".6rem"}}  size="small" color="primary" variant="contained" onClick={props.answered} className={classes.button}>
-  	            {props.card ? props.card.multipleChoice[0] : "Bonnie Watson Coleman"} 
+  	            {props.card.multipleChoice[0]} 
   	          </Button>
   	          <Button  key="1" style={{"fontSize" : ".6rem"}} size="small" color="primary" variant="contained"  onClick={props.answered} className={classes.button}>
-  	            {props.card ? props.card.multipleChoice[1] : "Elizabeth Warren"} 
+  	            {props.card.multipleChoice[1]} 
   	          </Button>
   	          <Button  key="2" style={answerStyle} size="small" color="primary" variant="contained"  onClick={props.answered} className={classes.button}>
-  	            {props.card ? (props.card.totalChoices === 4 ? props.card.multipleChoice[2] : props.card.multipleChoice[0]) : "Cynthia Axne"} 
+  	            {props.card.totalChoices === 4 ? props.card.multipleChoice[2] : props.card.multipleChoice[0]} 
   	          </Button>
   	          <Button  key="3" style={answerStyle} size="small" color="primary" variant="contained"  onClick={props.answered} className={classes.button}>
-  	            {props.card ? (props.card.totalChoices === 4 ? props.card.multipleChoice[3] : props.card.multipleChoice[1]) : "Nanette Baragan"} 
+  	            {props.card.totalChoices === 4 ? props.card.multipleChoice[3] : props.card.multipleChoice[1]} 
   	          </Button>
   	        </ButtonGroup>
   	      </CardActions>
   	    </CardContent>
 	      <CardActions style={{"paddingTop" : "0"}} >
-	        <Button size="medium" color="secondary" href="/allofcongress" onClick={props.reset}>
+	        <Button size="medium" color="secondary" onClick={props.reset}>
 	          Start Over
 	        </Button>
 	        <Button size="medium" color="secondary" href="/" onClick={props.exited}>

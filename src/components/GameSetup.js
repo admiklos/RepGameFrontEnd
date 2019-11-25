@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import Game from './Game';
 
@@ -12,7 +12,7 @@ const GameSetup = (props) => {
   const createQuestionList = (initialList) => {
   	  let questions = [];
   	  let memberList = [];
-  	  if (initialList.length > 0) {
+  	  if (initialList && initialList.length > 0) {
   	  	memberList = [...initialList];
   	  } else {
   	  	memberList = [...memberTrivia];
@@ -264,24 +264,18 @@ const GameSetup = (props) => {
 	      });
 	  }
 
-//      fetchGeneralTrivia();
+      fetchGeneralTrivia();
       fetchSenateMembers();
       fetchHouseMembers();
 
   },[createQuestionListMemo]);
 
-  // useCallback( () => {
-  //   memoizedQuestions();
-  // },[memoizedQuestions]);
-
-  //[createQuestionList, femaleMemberNames, houseCount, houseMembers, 
-   //  maleMemberNames, memberTrivia, senateCount, senateMembers, totalMembers]);
 
   const chooseGameToPlay = () => {
     console.log("Inside GameSetup render: ", gameToPlay, questionList, generalQuestions);	
     console.log("Inside GameSetup render - props", props.player, props.players);
   	if (gameToPlay === "AllMembers")
-       return <Game player={props.player} players={props.players} update={props.update} questions={questionList} />  	
+       return <Game player={props.player} players={props.players} update={props.update} questions={questionList} newGame={createQuestionListMemo}/>  	
   	if (gameToPlay === "StateOnlyMembers")
        return <h1 style={{"color" : "white"}}>In the Works</h1>  	
   	if (gameToPlay === "AllMembersFaceMatch")
